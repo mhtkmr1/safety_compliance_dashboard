@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Autonomous Forklift – Compliance & Safety Dashboard</title>
+  <!-- CSS: Bootstrap & DataTables -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+  <style>
+    body {font-family: system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif; scroll-behavior: smooth;}
+    header {background:#0d6efd;color:#fff;padding:1rem 0;margin-bottom:1rem;box-shadow:0 2px 4px rgba(0,0,0,.2);}
+    section{padding:1rem 0;}
+    .table-wrapper{overflow-x:auto;}
+    #navBtnGrp .btn{margin:.25rem;}
+    .details-link{cursor:pointer;color:#0d6efd;text-decoration:underline;}
+    tr:hover .details-link{color:#0a58ca;}
+  </style>
+  <!-- Smooth-scroll helper -->
+  <script>
+    function scrollToSection(id){const el=document.getElementById(id);if(el){el.scrollIntoView({behavior:"smooth"});}}
+  </script>
+</head>
+<body>
+  <header class="text-center">
+    <h1 class="h3 mb-0">Autonomous Forklift – Compliance &amp; Safety Dashboard</h1>
+    <small>Interactive reference for EU/UK certification, risk assessment &amp; V&amp;V</small>
+  </header>
+  <div class="container-xxl">
+    <div id="navBtnGrp" class="d-flex flex-wrap justify-content-center mb-2">
+      <button class="btn btn-sm btn-outline-primary" onclick="scrollToSection('standards')">Standards</button>
+      <button class="btn btn-sm btn-outline-primary" onclick="scrollToSection('design')">Design Guidelines</button>
+      <button class="btn btn-sm btn-outline-primary" onclick="scrollToSection('risk')">Risk Assessment</button>
+      <button class="btn btn-sm btn-outline-primary" onclick="scrollToSection('vnv')">Verification &amp; Validation</button>
+      <button class="btn btn-sm btn-outline-primary" onclick="scrollToSection('traceability')">Traceability Matrix</button>
+      <button class="btn btn-sm btn-outline-primary" onclick="scrollToSection('checklists')">Documentation / Process</button>
+    </div>
+
+    <!-- Standards Section -->
+    <section id="standards">
+      <h2 class="h4">Applicable Standards &amp; Certifications</h2>
+      <ul>
+        <li><strong>EN ISO 3691‑4:2023</strong> – Driverless industrial trucks &amp; systems (Type‑C safety)</li>
+        <li><strong>EN 1175:2020</strong> – Electrical &amp; electronic systems for industrial trucks</li>
+        <li><strong>EN ISO 12100:2010</strong> – Risk assessment &amp; risk reduction (general)</li>
+        <li><strong>EN ISO 13849‑1/‑2</strong> – Safety‑related control systems (PL determination &amp; validation)</li>
+        <li><strong>EN 60204‑1, EN 12895, EN 62061</strong> – Electrical, EMC, functional‑safety support</li>
+        <li><strong>EN 300 328 / EN 301 893 / EN 301 489‑17</strong> – Wi‑Fi radio &amp; EMC (RED)</li>
+        <li><strong>EN 60335‑2‑29</strong> or <strong>EN 62368‑1</strong> – Charger LVD compliance</li>
+        <li><strong>IEC 62619, UN 38.3</strong> – Lithium battery safety &amp; transport</li>
+        <li><strong>IEC 62443‑4‑1/‑2</strong> – Industrial cybersecurity (recommended)</li>
+      </ul>
+    </section>
+
+    <!-- Design Snapshot -->
+    <section id="design">
+      <h2 class="h4">Design Guidelines Snapshot</h2>
+      <ul>
+        <li>Dual‑channel emergency braking achieving <code>PL&nbsp;d/e</code> with stop distance shorter than scanner protective field.</li>
+        <li>Front &amp; rear <em>SIL2/PLd</em> safety scanners plus overhead 3D cameras; configurable protective &amp; warning fields.</li>
+        <li>Autonomous docking &lt; 0.2 m s‑1 within marked Docking Zone; visual/audible alerts before lift.</li>
+        <li>LiFePO<sub>4</sub> battery pack (24 V 210 Ah) with BMS, fuse, manual service disconnect; charger contacts de‑energised until mated.</li>
+        <li>Secure Wi‑Fi (WPA3, VLAN segregation), signed OTA firmware; watchdog &amp; safe‑stop on comms loss.</li>
+        <li>Maintenance mode limited to 0.3 m s‑1, hold‑to‑run pendant; safety sensors remain active.</li>
+      </ul>
+    </section>
+
+    <!-- Risk Assessment Table -->
+    <section id="risk">
+      <h2 class="h4 mb-3">Risk Assessment Register</h2>
+      <div class="table-wrapper">
+        <table id="riskTable" class="table table-sm table-striped table-bordered align-middle w-100">
+          <thead class="table-light">
+            <tr><th>ID</th><th>Hazard / Scenario</th><th>Severity</th><th>Likelihood</th><th>Initial</th><th>Mitigations</th><th>Residual</th><th>Components</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- V&V Table -->
+    <section id="vnv">
+      <h2 class="h4 mb-3">Verification &amp; Validation Plan</h2>
+      <div class="table-wrapper">
+        <table id="vnvTable" class="table table-sm table-striped table-bordered align-middle w-100">
+          <thead class="table-light">
+            <tr><th>ID</th><th>Test / Procedure</th><th>Objective</th><th>Risk ID(s)</th><th>Components</th><th>Std Clause</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Traceability Matrix -->
+    <section id="traceability">
+      <h2 class="h4">Traceability Matrix</h2>
+      <div class="table-wrapper">
+        <table id="traceTable" class="table table-sm table-bordered table-striped w-100">
+          <thead class="table-light"><tr><th>Standard Clause</th><th>Risk ID(s)</th><th>Test ID(s)</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Checklists -->
+    <section id="checklists">
+      <h2 class="h4">Documentation &amp; Process Checklists</h2>
+      <div class="accordion" id="docsAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingTF"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTF">Technical File (CE / UKCA)</button></h2>
+          <div id="collapseTF" class="accordion-collapse collapse" data-bs-parent="#docsAccordion"><div class="accordion-body">
+            <ul class="mb-0">
+              <li>Declaration of Conformity (CE + UKCA) signed</li>
+              <li>Risk assessment per EN ISO 12100 incl. residual risks</li>
+              <li>Design drawings &amp; schematics</li>
+              <li>Safety circuit PL calculations / SISTEMA reports</li>
+              <li>Test reports (EMC, LVD, functional safety, battery)</li>
+              <li>Software architecture &amp; version history</li>
+              <li>User manual &amp; maintenance instructions</li>
+            </ul>
+          </div></div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingCC"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCC">Production &amp; Change Control</button></h2>
+          <div id="collapseCC" class="accordion-collapse collapse" data-bs-parent="#docsAccordion"><div class="accordion-body">
+            <ul class="mb-0">
+              <li>Manufacturing SOPs with QC checkpoints</li>
+              <li>BoM revision control &amp; supplier certificates</li>
+              <li>Software release approval &amp; rollback plan</li>
+              <li>Field feedback &amp; CAPA tracking</li>
+            </ul>
+          </div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Details</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"></div></div></div></div>
+
+  <!-- JS Libraries -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+  <!-- Data + Init -->
+  <script>
+    // -------------------- FULL DATA SETS --------------------
+    const riskData = [
+      {id:"RA-01",hazard:"Collision with pedestrian (forward)",severity:"Catastrophic",likelihood:"Possible",initRisk:"High",mitigations:"Front scanner PLd, 3 m protective field, speed limit 1.5 m/s, alarm beacon, dual brake",residual:"Low",components:"Drive, Scanner, Brake",detail:`<p><strong>Scenario:</strong> AGV strikes a worker while moving forward.</p><p><strong>Mitigation procedure:</strong> Protective field sized via v=1.5 m/s, t_stop=1.2 s → 1.8 m; scanner set to 3 m.</p>`},
+      {id:"RA-02",hazard:"Collision with pedestrian (reverse)",severity:"Serious",likelihood:"Occasional",initRisk:"High",mitigations:"Rear scanner PLd, speed ≤0.8 m/s, reverse buzzer",residual:"Low",components:"Drive, Rear scanner",detail:`<p>Reverse path risk mitigated with reduced speed and dedicated buzzer.</p>`},
+      {id:"RA-03",hazard:"Foot crush during docking",severity:"Moderate",likelihood:"Occasional",initRisk:"Medium",mitigations:"Dock speed 0.2 m/s, micro-zone scanner, rounded skirt",residual:"Low",components:"Docking mech, Lift",detail:`<p>Foot between trolley and chassis; low kinetic energy & scanner stop.</p>`},
+      {id:"RA-04",hazard:"Load drop – latch failure",severity:"Severe",likelihood:"Remote",initRisk:"Medium",mitigations:"Mechanical latch + sensor, drive inhibit if open, check valve",residual:"Low",components:"Lift, Latch sensor",detail:`<p>Sensor feedback and PLC logic prevent travel with open latch.</p>`},
+      {id:"RA-05",hazard:"Tip-over during cornering",severity:"Catastrophic",likelihood:"Rare",initRisk:"High",mitigations:"CG low (210 mm), speed/accel limits, tilt sensor stop",residual:"Low",components:"Chassis, IMU",detail:`<p>Tilt >4° triggers e-stop.</p>`},
+      {id:"RA-06",hazard:"Battery short-circuit / fire",severity:"Severe",likelihood:"Remote",initRisk:"Medium",mitigations:"BMS short detection, main fuse, flame-retardant box",residual:"Low",components:"Battery, BMS",detail:`<p>IEC 62619 compliances, UN 38.3 tests done.</p>`},
+      {id:"RA-07",hazard:"Electric shock at charger",severity:"Serious",likelihood:"Remote",initRisk:"Medium",mitigations:"Contacts de-energised until mated, IP2X, RCD 30 mA",residual:"Low",components:"Charger",detail:`<p>Hi-pot test 1500 VAC, leakage <3.5 mA.</p>`},
+      {id:"RA-08",hazard:"Motor/electronics overheating",severity:"Moderate",likelihood:"Possible",initRisk:"Medium",mitigations:"Temp sensors, derate, fan cooling",residual:"Low",components:"Motors, Inverters",detail:`<p>Stops if >90 °C.</p>`},
+      {id:"RA-09",hazard:"Safety scanner failure",severity:"Severe",likelihood:"Remote",initRisk:"Medium",mitigations:"Dual scanners, self-test, PLd diagnostics",residual:"Low",components:"Safety PLC, Scanners",detail:`<p>Fault → safe stop.</p>`},
+      {id:"RA-10",hazard:"Electrical wiring fault causing loss of control",severity:"Severe",likelihood:"Remote",initRisk:"Medium",mitigations:"Separate safety wiring, fuses, cable protection",residual:"Low",components:"Harness",detail:`<p>EN 1175 compliance.</p>`},
+      {id:"RA-11",hazard:"Software bug causes runaway",severity:"Severe",likelihood:"Remote",initRisk:"Medium",mitigations:"Watchdog, MISRA C, SIL2 safety task",residual:"Low",components:"Software, Safety PLC",detail:`<p>Watchdog triggers safe stop within 100 ms.</p>`},
+      {id:"RA-12",hazard:"Wi-Fi loss leading to unsafe state",severity:"Moderate",likelihood:"Possible",initRisk:"Medium",mitigations:"Timeout 2 s then stop, buffered waypoints",residual:"Low",components:"Comms",detail:`<p>IEC 62443-secured channel.</p>`},
+      {id:"RA-13",hazard:"Collision with overhead obstacle",severity:"Serious",likelihood:"Remote",initRisk:"Medium",mitigations:"Overhead 3D cameras, height map",residual:"Low",components:"3D cameras",detail:`<p>PLd function class B.</p>`},
+      {id:"RA-14",hazard:"Maintenance mode misuse",severity:"Moderate",likelihood:"Occasional",initRisk:"Medium",mitigations:"Key switch, speed 0.3 m/s, hold-to-run",residual:"Low",components:"Pendant",detail:`<p>Safety scanner active even in manual.</p>`},
+      {id:"RA-15",hazard:"Hydraulic failure sudden drop",severity:"Serious",likelihood:"Remote",initRisk:"Medium",mitigations:"Check valve, velocity fuse",residual:"Low",components:"Hydraulics",detail:`<p>Drop <50 mm on failure.</p>`},
+      {id:"RA-16",hazard:"Charger over-temperature",severity:"Moderate",likelihood:"Possible",initRisk:"Medium",mitigations:"Thermal cutoff at 60 °C, fan",residual:"Low",components:"Charger",detail:`<p>EN 60335 temp limits validated.</p>`},
+      {id:"RA-17",hazard:"EMC interference causes false motion",severity:"Moderate",likelihood:"Remote",initRisk:"Medium",mitigations:"EN 12895 immunity tests, shielded cables",residual:"Low",components:"Electronics",detail:`<p>RF 10 V/m immunity tested OK.</p>`},
+      {id:"RA-18",hazard:"ESD damage leading to fault",severity:"Moderate",likelihood:"Possible",initRisk:"Medium",mitigations:"ESD diodes, chassis grounding",residual:"Low",components:"PCBs",detail:`<p>IEC 61000-4-2 level 4 passed.</p>`},
+      {id:"RA-19",hazard:"Slippery floor – extended stop",severity:"Moderate",likelihood:"Occasional",initRisk:"Medium",mitigations:"Traction tyres, floor spec, decel ramp",residual:"Low",components:"Wheels",detail:`<p>Stop calc uses μ=0.5 worst case.</p>`},
+      {id:"RA-20",hazard:"Unauthorized command injection",severity:"Serious",likelihood:"Remote",initRisk:"Medium",mitigations:"TLS, auth token, IDS",residual:"Low",components:"Network",detail:`<p>Pen‑test with OWASP passes.</p>`},
+      {id:"RA-21",hazard:"Operator ergonomic strain",severity:"Minor",likelihood:"Possible",initRisk:"Low",mitigations:"Load height 1.1 m, handles",residual:"Very Low",components:"Trolley design",detail:`<p>RULA score <4.</p>`},
+      {id:"RA-22",hazard:"Residual collision from sudden intrusion",severity:"Catastrophic",likelihood:"Rare",initRisk:"Medium",mitigations:"Training, signage, blue-light projector",residual:"Low",components:"Process",detail:`<p>Communicate residual risk to workers; last moment entry cannot be fully mitigated.</p>`}
+    ];
+
+    const vnvData = [
+      {id:"V-01",test:"Emergency stop braking distance",objective:"Stop ≤2.2 m at 1.5 m/s",risks:"RA-01,RA-02",components:"Brake",clause:"ISO 3691-4§6.5",detail:`<p>10 cycles, full load.</p>`},
+      {id:"V-02",test:"Front scanner protective field",objective:"Obstacle triggers stop",risks:"RA-01",components:"Front scanner",clause:"ISO 13849-2",detail:`<p>Test block 300×700 mm placed at 0.1 m increments.</p>`},
+      {id:"V-03",test:"Rear scanner protective field",objective:"Reverse stop",risks:"RA-02",components:"Rear scanner",clause:"ISO 3691-4 §5.7",detail:`<p>Similar to V-02 but reverse.</p>`},
+      {id:"V-04",test:"Docking speed measurement",objective:"Verify ≤0.2 m/s",risks:"RA-03",components:"Drive",clause:"ISO 3691-4 §5.10",detail:`<p>Laser speed gun during dock.</p>`},
+      {id:"V-05",test:"Latch sensor function",objective:"Prevent drive if latch open",risks:"RA-04",components:"Latch sensor",clause:"ISO 13849",detail:`<p>Unlatch trolley then attempt drive → should inhibit.</p>`},
+      {id:"V-06",test:"Tilt stability test",objective:"Tip resistance",risks:"RA-05",components:"Chassis",clause:"ISO 22915",detail:`<p>Incline table 4°.</p>`},
+      {id:"V-07",test:"Battery short-circuit",objective:"BMS disconnect",risks:"RA-06",components:"Battery",clause:"IEC 62619",detail:`<p>External short 5 mΩ for 1 s.</p>`},
+      {id:"V-08",test:"Battery thermal runaway simulation",objective:"No propagation",risks:"RA-06",components:"Battery",clause:"IEC 62619",detail:`<p>Heat one cell to 200 °C.</p>`},
+      {id:"V-09",test:"Charger hi-pot",objective:"1500 VAC no breakdown",risks:"RA-07",components:"Charger",clause:"EN 60335",detail:`<p>60 s hi-pot test.</p>`},
+      {id:"V-10",test:"Charger over-temp cutoff",objective:"Stops >60 °C",risks:"RA-16",components:"Charger",clause:"EN 60335",detail:`<p>Heat sensor area.</p>`},
+      {id:"V-11",test:"Motor temp shutdown",objective:"Drive cut at 90 °C",risks:"RA-08",components:"Motor",clause:"EN 60204",detail:`<p>Operate until overheat.</p>`},
+      {id:"V-12",test:"EMC radiated emission",objective:"Meet EN 12895 limits",risks:"RA-17",components:"Electronics",clause:"EN 12895",detail:`<p>Spectrum 30 MHz–1 GHz.</p>`},
+      {id:"V-13",test:"EMC immunity",objective:"No unsafe events @10 V/m",risks:"RA-17",components:"Electronics",clause:"EN 12895",detail:`<p>IEC 61000-4-3.</p>`},
+      {id:"V-14",test:"Safety PLC fault injection",objective:"Safe stop",risks:"RA-09,RA-11",components:"Safety PLC",clause:"ISO 13849-2",detail:`<p>Disable one safety channel.</p>`},
+      {id:"V-15",test:"Software watchdog",objective:"Stop on task hang",risks:"RA-11",components:"Software",clause:"IEC 62061",detail:`<p>Force infinite loop.</p>`},
+      {id:"V-16",test:"Wi-Fi dropout",objective:"Safe stop after 2 s",risks:"RA-12",components:"Comms",clause:"EN 300 328",detail:`<p>Shield AP.</p>`},
+      {id:"V-17",test:"Overhead obstacle detection",objective:"Camera stop",risks:"RA-13",components:"3D camera",clause:"ISO 3691-4 §5.7",detail:`<p>Hang pallet 1.8 m high across path.</p>`},
+      {id:"V-18",test:"Maintenance mode speed",objective:"≤0.3 m/s",risks:"RA-14",components:"Pendant",clause:"ISO 3691-4 §5.11",detail:`<p>Digital tachometer.
+      </p>`},
+      {id:"V-19",test:"Hydraulic drop test",objective:"Drop <50 mm on hose burst",risks:"RA-15",components:"Hydraulics",clause:"ISO 4413",detail:`<p>Simulated hose burst valve.</p>`},
+      {id:"V-20",test:"Brake redundancy",objective:"Stop with single channel fail",risks:"RA-01",components:"Brake",clause:"ISO 13849",detail:`<p>Open one brake circuit.</p>`},
+      {id:"V-21",test:"Battery endurance",objective:"Run ≥8 h duty",risks:"RA-06",components:"Battery",clause:"Duty cycle test",detail:`<p>Full mission set.</p>`},
+      {id:"V-22",test:"BMS fault reporting",objective:"Error flag within 1 s",risks:"RA-06",components:"BMS",clause:"CANopen Safety",detail:`<p>Induce over-temp.</p>`},
+      {id:"V-23",test:"Network penetration",objective:"Block unauth cmd",risks:"RA-20",components:"Network",clause:"IEC 62443",detail:`<p>OWASP ZAP scan.</p>`},
+      {id:"V-24",test:"Ergonomic assessment",objective:"RULA score",risks:"RA-21",components:"Trolley",clause:"ISO 6385",detail:`<p>10 workers evaluation.</p>`},
+      {id:"V-25",test:"E-stop reset logic",objective:"Manual reset needed",risks:"RA-01,RA-02",components:"E-stop",clause:"ISO 13850",detail:`<p>Press & observe.</p>`},
+      {id:"V-26",test:"Command injection attempt",objective:"Reject forged packet",risks:"RA-20",components:"Software",clause:"IEC 62443",detail:`<p>Replay attack.</p>`},
+      {id:"V-27",test:"Lift proof load",objective:"125% load 5 min",risks:"RA-04",components:"Lift",clause:"ISO 3691-4 §7",detail:`<p>Load 3125 kg static.</p>`},
+      {id:"V-28",test:"Latch mechanical strength",objective:"1.5× load cycles",risks:"RA-04",components:"Latch",clause:"ISO 12100",detail:`<p>10,000 cycles.</p>`},
+      {id:"V-29",test:"Load sensor calibration",objective:"±2% FS",risks:"RA-04",components:"Load cell",clause:"EN 45501",detail:`<p>Five point calib.</p>`},
+      {id:"V-30",test:"Low friction stop",objective:"Stop ≤2.5 m on μ=0.4",risks:"RA-19",components:"Drive",clause:"ISO 3691-4",detail:`<p>Floor coated with dust.</p>`},
+      {id:"V-31",test:"ESD immunity",objective:"No fault @8 kV",risks:"RA-18",components:"PCBs",clause:"IEC 61000-4-2",detail:`<p>Contact & air.</p>`},
+      {id:"V-32",test:"Localization loss",objective:"Safe stop",risks:"RA-09",components:"Navigation",clause:"ISO 3691-4",detail:`<p>Cover LiDAR.</p>`},
+      {id:"V-33",test:"Path accuracy",objective:"±30 mm",risks:"RA-01",components:"Nav",clause:"Performance",detail:`<p>Run 20 laps.</p>`},
+      {id:"V-34",test:"Multi-robot interaction",objective:"No collision",risks:"RA-22",components:"Fleet manager",clause:"ISO 3691-4",detail:`<p>Two AGVs crossing.</p>`},
+      {id:"V-35",test:"Documentation audit",objective:"Tech file complete",risks:"All",components:"Docs",clause:"Machinery Dir.",detail:`<p>Checklists in section.</p>`},
+      {id:"V-36",test:"Technical file review",objective:"All EHSR addressed",risks:"All",components:"Docs",clause:"Machinery Dir.",detail:`<p>Third-party review.</p>`},
+      {id:"V-37",test:"User training eval",objective:"Workers score ≥80%",risks:"RA-14,RA-22",components:"Training",clause:"ISO 45001",detail:`<p>Quiz post-training.</p>`}
+    ];
+
+    const traceData = [
+      {clause:"ISO 3691-4 §5.7",risks:"RA-01, RA-02, RA-13, RA-22",tests:"V-01, V-02, V-03, V-17, V-34"},
+      {clause:"ISO 3691-4 §5.10",risks:"RA-03",tests:"V-04"},
+      {clause:"EN 1175 §4",risks:"RA-10",tests:"V-12, V-13"},
+      {clause:"IEC 62619",risks:"RA-06",tests:"V-07, V-08, V-21, V-22"},
+      {clause:"EN 60335",risks:"RA-07, RA-16",tests:"V-09, V-10"},
+      {clause:"IEC 62443",risks:"RA-20",tests:"V-23, V-26"},
+      {clause:"ISO 22915",risks:"RA-05",tests:"V-06"}
+    ];
+
+    // ----------------- Populate Tables -----------------
+    function populate(tableId,data,cols){const tbody=document.querySelector(`#${tableId} tbody`);data.forEach(obj=>{const tr=document.createElement("tr");if(obj.detail)tr.setAttribute("data-detail",obj.detail);cols.forEach(c=>{const td=document.createElement("td");td.innerHTML= obj[c]; if(c==='hazard'||c==='test') td.classList.add('details-link');tr.appendChild(td);});tbody.appendChild(tr);});}
+
+    document.addEventListener('DOMContentLoaded',()=>{
+      populate('riskTable',riskData,['id','hazard','severity','likelihood','initRisk','mitigations','residual','components']);
+      populate('vnvTable',vnvData,['id','test','objective','risks','components','clause']);
+      populate('traceTable',traceData,['clause','risks','tests']);
+      const dtOpt={lengthMenu:[[10,25,50,-1],[10,25,50,'All']],pageLength:10};
+      $('#riskTable').DataTable(dtOpt);
+      $('#vnvTable').DataTable(dtOpt);
+      $('#traceTable').DataTable({paging:false,searching:false,info:false});
+
+      $('#riskTable tbody, #vnvTable tbody').on('click','tr',function(){const d=$(this).attr('data-detail');if(d){$('#detailModal .modal-body').html(d);$('#detailModal .modal-title').text($(this).children('td:first').text());new bootstrap.Modal(document.getElementById('detailModal')).show();}});
+    });
+  </script>
+</body>
+</html>
