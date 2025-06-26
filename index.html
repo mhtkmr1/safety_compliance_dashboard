@@ -15,6 +15,12 @@
     #navBtnGrp .btn{margin:.25rem;}
     .details-link{cursor:pointer;color:#0d6efd;text-decoration:underline;}
     tr:hover .details-link{color:#0a58ca;}
+    /* Row colors by severity */
+    .sev-catastrophic{background-color:#f8d7da !important;}
+    .sev-severe{background-color:#f5c2c7 !important;}
+    .sev-serious{background-color:#ffeeba !important;}
+    .sev-moderate{background-color:#e2e3e5 !important;}
+    .sev-minor{background-color:#d1e7dd !important;}
   </style>
   <!-- Smooth-scroll helper -->
   <script>
@@ -224,8 +230,24 @@
     ];
 
     // ----------------- Populate Tables -----------------
-    function populate(tableId,data,cols){const tbody=document.querySelector(`#${tableId} tbody`);data.forEach(obj=>{const tr=document.createElement("tr");if(obj.detail)tr.setAttribute("data-detail",obj.detail);cols.forEach(c=>{const td=document.createElement("td");td.innerHTML= obj[c]; if(c==='hazard'||c==='test') td.classList.add('details-link');tr.appendChild(td);});tbody.appendChild(tr);});}
-
+    //function populate(tableId,data,cols){const tbody=document.querySelector(`#${tableId} tbody`);data.forEach(obj=>{const tr=document.createElement("tr");if(obj.detail)tr.setAttribute("data-detail",obj.detail);cols.forEach(c=>{const td=document.createElement("td");td.innerHTML= obj[c]; if(c==='hazard'||c==='test') td.classList.add('details-link');tr.appendChild(td);});tbody.appendChild(tr);});}
+    function populate(tableId,data,cols){
+      const tbody=document.querySelector(`#${tableId} tbody`);
+      data.forEach(obj=>{
+        const tr=document.createElement("tr");
+        if(obj.detail)tr.setAttribute("data-detail",obj.detail);
+        if(tableId==='riskTable' && obj.severity){
+          tr.classList.add('sev-'+obj.severity.toLowerCase());
+        }
+        cols.forEach(c=>{
+          const td=document.createElement("td");
+          td.innerHTML=obj[c];
+          if(c==='hazard'||c==='test') td.classList.add('details-link');
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
     document.addEventListener('DOMContentLoaded',()=>{
       populate('riskTable',riskData,['id','hazard','severity','likelihood','initRisk','mitigations','residual','components']);
       populate('vnvTable',vnvData,['id','test','objective','risks','components','clause']);
